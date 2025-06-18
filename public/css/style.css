@@ -1,0 +1,51 @@
+.navbar-nav .nav-item {
+  font-size: 22px;
+  text-transform: uppercase;
+  color: black !important;
+  font-weight: bold;
+}
+
+.navbar-nav .linkNew {
+  font-size: 15px;
+  text-transform: uppercase;
+  color: black !important;
+  font-weight: bold;
+}
+
+html, body {
+  font-family: 'Poppins', sans-serif !important;
+  background: #8a8ae6;
+  background: linear-gradient(90deg, rgba(138, 138, 230, 1) 0%, rgba(189, 189, 240, 1) 21%, rgba(209, 209, 255, 1) 50%, rgba(152, 152, 212, 1) 100%);
+}
+
+.breadcrumb-container {
+  display: flex;
+  font-family: sans-serif;
+}
+
+
+.breadcrumb-item {
+  position: relative;
+  background: linear-gradient(to right, #2196f3, #1e88e5);
+  color: white;
+  padding: 10px 25px 10px 45px;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%, 15px 50%);
+  margin-right: -10px;
+  z-index: 1;
+}
+
+.breadcrumb-item .bi-beaker{
+  margin-right: 30px;
+}
+
+.breadcrumb-item.first {
+  padding-left: 20px;
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  z-index: 2;
+}
