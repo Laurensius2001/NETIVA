@@ -1,6 +1,6 @@
 ✅ Fitur Utama Aplikasi:
-🔐 Autentikasi dan Role Management
-Sistem login dengan role Admin, Dokter, dan Pasien
+- Autentikasi dan Role Management
+- Sistem login dengan role Admin, Dokter, dan Pasien
 
 Role-based access: setiap user hanya bisa mengakses fitur sesuai peran
 
