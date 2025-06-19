@@ -1,57 +1,42 @@
 ✅ Fitur Utama Aplikasi:
 - Autentikasi dan Role Management
 - Sistem login dengan role Admin, Dokter, dan Pasien
-
-Role-based access: setiap user hanya bisa mengakses fitur sesuai peran
+- Role-based access: setiap user hanya bisa mengakses fitur sesuai peran
 
 👩‍⚕️ Manajemen Dokter (Admin)
-CRUD data dokter (via modal Bootstrap)
+- CRUD data dokter (via modal Bootstrap)
+- Menyimpan data seperti nama, spesialis, institusi, username, dll
 
-Menyimpan data seperti nama, spesialis, institusi, username, dll
-
-🧑‍💼 Manajemen Pasien (Admin)
-CRUD data pasien
-
-Fitur verifikasi hasil screening oleh dokter
+Manajemen Pasien (Admin)
+- CRUD data pasien
+- Fitur verifikasi hasil screening oleh dokter
 
 📷 Manajemen Citra (Admin & Dokter)
-Upload citra pasien sebelum dan sesudah
-
-Form upload mendukung kamera langsung (capture via mobile)
-
-Validasi file, penyimpanan ke storage
+- Upload citra pasien sebelum dan sesudah
+- Form upload mendukung kamera langsung (capture via mobile)
+- Validasi file, penyimpanan ke storage
 
 📍 Dashboard Pasien
-Menampilkan data diri pasien
-
-Menampilkan maps lokasi pasien (berbasis lokasi seperti Bandung)
-
-Visualisasi sebaran kasus kanker
+- Menampilkan data diri pasien
+- Menampilkan maps lokasi pasien (berbasis lokasi seperti Bandung)
+- Visualisasi sebaran kasus kanker
 
 📈 Dashboard Dokter
-Melihat daftar pasien dan memverifikasi status (Positif/Negatif)
-
-Detail info pasien
+- Melihat daftar pasien dan memverifikasi status (Positif/Negatif)
+- Detail info pasien
 
 🌐 Frontend:
-Menggunakan Bootstrap 5 (navbar, sidebar, cards, modals, dll)
-
-Breadcrumb bergaya seperti panah
-
-DataTable interaktif (sortable, search, pagination)
+ - Menggunakan Bootstrap 5 (navbar, sidebar, cards, modals, dll)
+ - Breadcrumb bergaya seperti panah
+ - DataTable interaktif (sortable, search, pagination)
 
 📦 Backend:
-Laravel 11 (mengikuti struktur MVC)
-
-Eloquent ORM
-
-FormRequest (untuk validasi)
-
-Resource Controller
-
-Seeder awal untuk data user admin
-
-Penyimpanan citra via storage/app/public
+ - Laravel 11 (mengikuti struktur MVC)
+ - Eloquent ORM
+ - FormRequest (untuk validasi)
+ -Resource Controller
+ - Seeder awal untuk data user admin
+ - Penyimpanan citra via storage/app/public
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
