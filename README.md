@@ -1,42 +1,85 @@
-✅ Fitur Utama Aplikasi:
-- Autentikasi dan Role Management
-- Sistem login dengan role Admin, Dokter, dan Pasien
-- Role-based access: setiap user hanya bisa mengakses fitur sesuai peran
+Halaman Home Page
+![image](https://github.com/user-attachments/assets/fe5cba7c-71bd-43b6-9b8d-248ba1122a9f)
 
-👩‍⚕️ Manajemen Dokter (Admin)
-- CRUD data dokter (via modal Bootstrap)
-- Menyimpan data seperti nama, spesialis, institusi, username, dll
+Halaman Login
+![image](https://github.com/user-attachments/assets/038b06b4-660b-4f16-92a8-597241b382f6)
 
-Manajemen Pasien (Admin)
-- CRUD data pasien
-- Fitur verifikasi hasil screening oleh dokter
+Halaman Nakes
+![image](https://github.com/user-attachments/assets/bf6ba440-9371-4287-ae19-50c46644f689)
 
-📷 Manajemen Citra (Admin & Dokter)
-- Upload citra pasien sebelum dan sesudah
-- Form upload mendukung kamera langsung (capture via mobile)
-- Validasi file, penyimpanan ke storage
+Halaman Dokter
+![image](https://github.com/user-attachments/assets/0cf382ec-4728-4b6a-a3c8-2d0094779180)
 
-📍 Dashboard Pasien
-- Menampilkan data diri pasien
-- Menampilkan maps lokasi pasien (berbasis lokasi seperti Bandung)
-- Visualisasi sebaran kasus kanker
+Halaman Admin Pemerintah
+![image](https://github.com/user-attachments/assets/63ade064-7be3-400f-9e99-5022eec358e2)
 
-📈 Dashboard Dokter
-- Melihat daftar pasien dan memverifikasi status (Positif/Negatif)
-- Detail info pasien
 
-🌐 Frontend:
- - Menggunakan Bootstrap 5 (navbar, sidebar, cards, modals, dll)
- - Breadcrumb bergaya seperti panah
- - DataTable interaktif (sortable, search, pagination)
+# NETIVA - Deteksi Dini Kanker Serviks
 
-📦 Backend:
- - Laravel 11 (mengikuti struktur MVC)
- - Eloquent ORM
- - FormRequest (untuk validasi)
- -Resource Controller
- - Seeder awal untuk data user admin
- - Penyimpanan citra via storage/app/public
+Aplikasi berbasis web untuk membantu proses deteksi dini kanker serviks, memungkinkan dokter dan admin pemerintahan melakukan verifikasi data pasien serta analisis visual citra medis.
+
+---
+
+## 🔑 Fitur Utama
+
+### 👥 Role Pengguna
+
+1. **Admin Utama**
+   - Login
+   - Lihat dashboard peta sebaran kanker serviks berdasarkan lokasi pasien
+   - Kelola data dokter dan pasien
+   - Upload dan kelola citra medis (sebelum, sesudah, AI)
+   - Verifikasi status pasien
+
+2. **Dokter**
+   - Lihat data diri dan pasien
+   - Verifikasi status kanker pasien
+   - Anotasi gambar medis (sebelum, sesudah, AI) menggunakan Fabric.js
+
+3. **Admin Pemerintahan**
+   - Login akun
+   - Lihat dashboard peta sebaran kanker serviks berdasarkan lokasi pasien dan bisa melihat detail nama-nama pasien yg terverifikasi positif berdasarkan lokasi pasien
+
+---
+
+## 🖼️ Fitur Citra Medis
+
+- Upload gambar `citra_sebelum`, `citra_sesudah`, dan `citra_ai`
+- Preview gambar 
+- Fitur anotasi interaktif (coretan, undo, hapus) menggunakan **Fabric.js**
+- Gambar anotasi disimpan dan menimpa file lama
+
+---
+
+## 🗺️ Visualisasi Peta
+
+- Dashboard admin pemerintahan menampilkan peta distribusi kanker serviks
+- Data pasien ditampilkan berdasarkan lokasi (contoh: Bandung)
+
+---
+
+## ⚙️ Teknologi yang Digunakan
+
+- Laravel 11
+- Bootstrap 5
+- Fabric.js (untuk anotasi gambar)
+- MySQL via Laragon (dev environment)
+- Git & GitHub
+
+---
+
+## 📦 Instalasi
+
+```bash
+git clone https://github.com/Laurensius2001/NETIVA.git
+cd NETIVA
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
+php artisan serve
+
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
