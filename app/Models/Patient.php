@@ -10,7 +10,6 @@ class Patient extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'nama',
         'nik',
         'komentar',
@@ -26,6 +25,7 @@ class Patient extends Model
         'pekerjaan',
         'golongan_darah',
         'verifikasi',
+        'doctor_id',
     ];
 
     public function user()
@@ -35,5 +35,10 @@ class Patient extends Model
     public function citra()
     {
         return $this->hasOne(CitraPasien::class);
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
     }
 }

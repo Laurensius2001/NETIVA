@@ -21,68 +21,88 @@ class PatientCitraController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'sebelum' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'sesudah' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+          'patient_id' => 'required|exists:patients,id',
+          'sebelum' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+          'sesudah' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+          'citra_ai' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+          'ket_nakes' => 'nullable|string',
         ]);
 
         // Pastikan direktori ada
-        if (!Storage::exists('public/citra/sebelum')) {
-            Storage::makeDirectory('public/citra/sebelum');
-        }
+          foreach (['citra/sebelum', 'citra/sesudah', 'citra/ai'] as $folder) {
+              if (!Storage::exists("public/$folder")) {
+                  Storage::makeDirectory("public/$folder");
+              }
+          }
 
-        if (!Storage::exists('public/citra/sesudah')) {
-            Storage::makeDirectory('public/citra/sesudah');
-        }
+          // Simpan file dengan nama unik
+          $sebelumPath = $request->file('sebelum')->storeAs(
+              'citra/sebelum',
+              uniqid() . '.' . $request->file('sebelum')->getClientOriginalExtension(),
+              'public'
+          );
 
-        // Simpan file dengan nama unik
-        $sebelumPath = $request->file('sebelum')->storeAs(
-            'citra/sebelum',
-            uniqid() . '.' . $request->file('sebelum')->getClientOriginalExtension(),
-            'public'
-        );
+          $sesudahPath = $request->file('sesudah')->storeAs(
+              'citra/sesudah',
+              uniqid() . '.' . $request->file('sesudah')->getClientOriginalExtension(),
+              'public'
+          );
 
-        $sesudahPath = $request->file('sesudah')->storeAs(
-            'citra/sesudah',
-            uniqid() . '.' . $request->file('sesudah')->getClientOriginalExtension(),
-            'public'
-        );
+          $citraAiPath = null;
+          if ($request->hasFile('citra_ai')) {
+              $citraAiPath = $request->file('citra_ai')->storeAs(
+                  'citra/ai',
+                  uniqid() . '.' . $request->file('citra_ai')->getClientOriginalExtension(),
+                  'public'
+              );
+          }
 
         // Simpan ke database
         CitraPasien::create([
             'patient_id' => $request->patient_id,
             'citra_sebelum' => $sebelumPath,
             'citra_sesudah' => $sesudahPath,
+            'citra_ai' => $citraAiPath,
+            'ket_nakes' => $request->ket_nakes,
         ]);
 
         return redirect()->route('admin.citra.index')->with('success', 'Citra berhasil ditambahkan.');
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'sebelum' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
-            'sesudah' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
-        ]);
+    public function update(Request $request, $id){
+      $request->validate([
+        'patient_id' => 'required|exists:patients,id',
+        'sebelum' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+        'sesudah' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+        'citra_ai' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+        'ket_nakes' => 'nullable|string',
+      ]);
 
-        $citra = CitraPasien::findOrFail($id);
+      $citra = CitraPasien::findOrFail($id);
 
-        if ($request->hasFile('sebelum')) {
-            Storage::disk('public')->delete($citra->citra_sebelum);
-            $citra->citra_sebelum = $request->file('sebelum')->store('citra/sebelum', 'public');
-        }
+      if ($request->hasFile('sebelum')) {
+          Storage::disk('public')->delete($citra->citra_sebelum);
+          $citra->citra_sebelum = $request->file('sebelum')->store('citra/sebelum', 'public');
+      }
 
-        if ($request->hasFile('sesudah')) {
-            Storage::disk('public')->delete($citra->citra_sesudah);
-            $citra->citra_sesudah = $request->file('sesudah')->store('citra/sesudah', 'public');
-        }
+      if ($request->hasFile('sesudah')) {
+          Storage::disk('public')->delete($citra->citra_sesudah);
+          $citra->citra_sesudah = $request->file('sesudah')->store('citra/sesudah', 'public');
+      }
 
-        $citra->patient_id = $request->patient_id;
-        $citra->save();
+      if ($request->hasFile('citra_ai')) {
+          if ($citra->citra_ai) {
+              Storage::disk('public')->delete($citra->citra_ai);
+          }
+          $citra->citra_ai = $request->file('citra_ai')->store('citra/ai', 'public');
+      }
+      $citra->ket_nakes = $request->ket_nakes;
+      $citra->patient_id = $request->patient_id;
+      $citra->save();
 
-        return redirect()->route('admin.citra.index')->with('success', 'Citra berhasil diperbarui.');
+      return redirect()->route('admin.citra.index')->with('success', 'Citra berhasil diperbarui.');
     }
+
 
     public function destroy($id)
     {

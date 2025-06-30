@@ -10,12 +10,26 @@ class AdminSeeder extends Seeder
 {
     public function run()
     {
-        User::create([
-            'name' => 'Administrator',
-            'username' => 'admin',
-            'email' => 'admin@example.com', // Tambahkan ini
-            'password' => Hash::make('12345'),
-            'role' => 'admin',
-        ]);
+        // Admin Nakes
+        User::updateOrCreate(
+            ['email' => 'nakes@example.com'],
+            [
+                'name' => 'Admin Nakes',
+                'username' => 'nakes',
+                'password' => Hash::make('12345'),
+                'role' => 'admin',
+            ]
+        );
+
+        // Admin Pemerintahan
+        User::updateOrCreate(
+            ['email' => 'pemerintah@netiva.id'],
+            [
+                'name' => 'Admin Pemerintahan',
+                'username' => 'pemerintah',
+                'password' => Hash::make('12345'),
+                'role' => 'admin_pemerintah',
+            ]
+        );
     }
 }

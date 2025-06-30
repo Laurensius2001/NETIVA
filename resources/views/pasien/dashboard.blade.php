@@ -4,7 +4,7 @@
 <div class="container mt-4">
   <h4>Selamat Datang sdr. {{ $patient->nama }}</h4>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 mb-3">
       <div class="card">
         <div class="card-body">
           <ul class="list-group">
@@ -42,7 +42,11 @@
                 Lihat Gambar
               </button>
             </li>
-            <li class="list-group-item"><strong>Komentar Dokter :</strong> {{ $patient->komentar }}</li>
+            <li class="list-group-item"><strong>Komentar Dokter :</strong> @if($patient->komentar)
+                                {{ $patient->komentar }}
+                              @else
+                                <span class="badge bg-warning text-dark">Belum dikomentari</span>
+                              @endif</li>
           </ul>
           <div class="modal fade" id="modalFotoSebelum" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -82,12 +86,10 @@
       </div>
     </div>
     <!-- Kolom maps -->
-
-    <div class="col-md-8">
+   <div class="col-md-8">
       <div class="px-2 py-2 bg-light rounded-3">
-        <div class="container-fluid"
-          <div id="map" style="height: 690px;"></div>
-        </div>
+        <h5 class="text-center fw-bold mb-3">Peta Persebaran Kasus Kanker Serviks (Wilayah Jawa Barat)</h5>
+        <div id="map" style="height: 690px;"></div>
       </div>
     </div>
 
@@ -95,112 +97,96 @@
 </div>
 
 <script>
-  var map = L.map('map').setView([-2.5, 117.5], 5);
-
-  // Tambahkan tile layer dari OSM
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
-
-  // Data jumlah kasus per provinsi (gunakan lowercase dan sesuai GeoJSON)
-  const dataProvinsi = {
-    "aceh": 6480 ,
-    "sumatera utara": 18000 ,
-    "sumatera barat": 6600 ,
-    "riau": 8040 ,
-    "jambi": 4560 ,
-    "sumatera selatan": 7,
-    "bengkulu": 2,
-    "lampung": 6,
-    "dki jakarta": 20,
-    "jawa barat": 30,
-    "jawa tengah": 25,
-    "di yogyakarta": 8,
-    "jawa timur": 18,
-    "bali": 4,
-    "kalimantan barat": 6,
-    "kalimantan tengah": 3,
-    "kalimantan selatan": 4,
-    "kalimantan timur": 5,
-    "sulawesi utara": 2,
-    "sulawesi tengah": 3,
-    "sulawesi selatan": 7,
-    "papua": 1,
-    "nusa tenggara timur": 15
-  };
-
-  // Fungsi warna acak tetap konsisten berdasarkan nama
-  function getColor(nama) {
-    const colors = ['#FF5733', '#33FF57', '#3357FF', '#F39C12', '#8E44AD'];
-    const hash = [...nama].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return colors[hash % colors.length];
-  }
-
-  // Style setiap provinsi
-  function style(feature) {
-    const nama = (feature.properties.Propinsi || '-').toLowerCase().trim();
-    return {
-      fillColor: getColor(nama),
-      weight: 1,
-      opacity: 1,
-      color: 'white',
-      dashArray: '3',
-      fillOpacity: 0.7
+  const map = L.map('map').setView([-6.9, 107.6], 8);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    const dataKabupaten = {
+      "BANDUNG": 56,
+      "BANDUNG BARAT": 34,
+      "BANJAR": 12,
+      "BEKASI": 70,
+      "BOGOR": 63,
+      "CIAMIS": 28,
+      "CIANJUR": 39,
+      "CIREBON": 31,
+      "DEPOK": 45,
+      "GARUT": 50,
+      "INDRAMAYU": 42,
+      "KARAWANG": 36,
+      "KOTA BANDUNG": 48,
+      "KOTA BEKASI": 40,
+      "KOTA BOGOR": 33,
+      "KOTA CIMAHI": 21,
+      "KOTA CIREBON": 25,
+      "KOTA DEPOK": 38,
+      "KOTA SUKABUMI": 17,
+      "KOTA TASIKMALAYA": 22,
+      "KUNINGAN": 27,
+      "MAJALENGKA": 19,
+      "PANGANDARAN": 15,
+      "PURWAKARTA": 18,
+      "SUBANG": 26,
+      "SUKABUMI": 35,
+      "SUMEDANG": 24,
+      "TASIKMALAYA": 29
     };
-  }
+    function getColor(jumlah) {
+      return jumlah > 60 ? '#800026' :
+            jumlah > 40 ? '#BD0026' :
+            jumlah > 30 ? '#E31A1C' :
+            jumlah > 20 ? '#FC4E2A' :
+            jumlah > 10 ? '#FD8D3C' :
+            jumlah > 0  ? '#FEB24C' :
+                          '#FFEDA0';
+    }
+    function style(feature) {
+      const nama = (feature.properties.KABKOT || '').trim();
+      const jumlah = dataKabupaten[nama] || 0;
+      return {
+        fillColor: getColor(jumlah),
+        weight: 1,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+      };
+    }
 
-  // Interaksi provinsi
-  function onEachFeature(feature, layer) {
-    const properName = feature.properties.Propinsi || '-';
-    const nama = properName.toLowerCase().trim();
-    const jumlah = dataProvinsi[nama] || 0;
+    function onEachFeature(feature, layer) {
+      const nama = (feature.properties.KABKOT || '-').trim();
+      const jumlah = dataKabupaten[nama] || 0;
+      layer.bindPopup(`<strong>${nama}</strong><br>${jumlah} kasus kanker serviks`);
 
-    layer.bindPopup(`<strong>${properName}</strong><br>${jumlah} kasus kanker serviks`);
-
-    layer.on({
-      mouseover: function (e) {
-        var layer = e.target;
-        layer.setStyle({
-          weight: 2,
-          color: '#333',
-          fillOpacity: 0.9
-        });
-        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-          layer.bringToFront();
+      layer.on({
+        mouseover: function (e) {
+          e.target.setStyle({
+            weight: 3,
+            color: '#666',
+            fillOpacity: 0.9
+          });
+          e.target.openPopup();
+        },
+        mouseout: function (e) {
+          geojson.resetStyle(e.target);
+          e.target.closePopup();
+        },
+        click: function (e) {
+          map.fitBounds(e.target.getBounds());
         }
-        layer.openPopup();
-      },
-      mouseout: function (e) {
-        geojson.resetStyle(e.target);
-        e.target.closePopup();
-      },
-      click: function (e) {
-        map.fitBounds(e.target.getBounds());
-      }
-    });
-  }
+      });
+    }
 
-  var geojson;
+    let geojson;
 
-  // Ambil file GeoJSON dan render ke peta
-  fetch('/maps/indonesia-prov.geojson')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("GeoJSON tidak ditemukan");
-      }
-      return response.json();
-    })
-    .then(geoData => {
-      geojson = L.geoJson(geoData, {
-        style: style,
-        onEachFeature: onEachFeature
-      }).addTo(map);
-    })
-    .catch(error => {
-      console.error('Gagal memuat GeoJSON:', error);
-    });
+    fetch('/maps/jabar_kabupaten.geojson')
+      .then(res => res.json())
+      .then(data => {
+        geojson = L.geoJson(data, {
+          style: style,
+          onEachFeature: onEachFeature
+        }).addTo(map);
+      })
+      .catch(err => console.error("Gagal memuat GeoJSON:", err));
 </script>
-
-
-
 </x-layout>

@@ -1,21 +1,31 @@
 .navbar-nav .nav-item {
-  font-size: 22px;
+  font-size: 18px;
   text-transform: uppercase;
-  color: black !important;
+  color: #175e54 !important;
   font-weight: bold;
 }
 
+.link-home {
+  color: #175e54 !important;
+}
 .navbar-nav .linkNew {
   font-size: 15px;
   text-transform: uppercase;
-  color: black !important;
+  color: #175e54 !important;
   font-weight: bold;
 }
 
 html, body {
+  background-color: #f6fbf7 !important;
+  scroll-behavior: smooth;
   font-family: 'Poppins', sans-serif !important;
-  background: #8a8ae6;
-  background: linear-gradient(90deg, rgba(138, 138, 230, 1) 0%, rgba(189, 189, 240, 1) 21%, rgba(209, 209, 255, 1) 50%, rgba(152, 152, 212, 1) 100%);
+}
+
+.shadow-all-sides {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 
+              0 -4px 6px rgba(0, 0, 0, 0.05),
+              4px 0 6px rgba(0, 0, 0, 0.05),
+              -4px 0 6px rgba(0, 0, 0, 0.05);
 }
 
 .breadcrumb-container {
@@ -49,3 +59,4 @@ html, body {
   border-bottom-left-radius: 8px;
   z-index: 2;
 }
+

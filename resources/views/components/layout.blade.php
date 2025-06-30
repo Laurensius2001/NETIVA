@@ -10,12 +10,13 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body>
 
   {{-- Navbar --}}
-  <nav class="navbar navbar-expand-lg px-5 py-4">
+  <nav class="navbar navbar-expand-lg fixed-top shadow-sm px-3 py-3"style="background-color: #f6fbf7;">
     <div class="container">
       <a class="navbar-brand" href="/"><img src="{{ asset('images/logo.png') }}" alt="Netiva" height="30"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -24,10 +25,10 @@
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          @auth
-          @if(auth()->user()->role === 'admin')
-      
-        <li class="nav-item linkNew"><a class="nav-link" href="/admin/dashboard">Dashboard Admin</a></li>
+
+        @auth
+        @if(auth()->user()->role === 'admin')
+        <li class="nav-item linkNew"><a class="nav-link" href="/admin/dashboard">Dashboard Nakes</a></li>
         <li class="nav-item linkNew"><a class="nav-link" href="{{ route('admin.doctors.index') }}">Kelola Dokter</a></li>
         <li class="nav-item linkNew"><a class="nav-link" href="{{ route('admin.patients.index') }}">Kelola Pasien</a></li>
         <li class="nav-item linkNew"><a class="nav-link" href="{{ route('admin.citra.index') }}">Kelola Citra Pasien</a></li>
@@ -47,13 +48,33 @@
       </form>
 
       @else
-        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
+      <li class="nav-item"><a class="nav-link link-home" href="#beranda">Beranda</a></li>
+      <li class="nav-item"><a class="nav-link link-home" href="#tentang">Tentang Netiva</a></li>
+      <li class="nav-item"><a class="nav-link link-home" href="{{ route('login') }}">Login</a></li>
       @endauth
         </ul>
 
       </div>
     </div>
   </nav>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+      const navbarCollapse = document.querySelector('.navbar-collapse');
+
+      navLinks.forEach(function(link) {
+        link.addEventListener('click', function () {
+          const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+            toggle: false
+          });
+          bsCollapse.hide();
+        });
+      });
+    });
+  </script>
+
+
   @if ($errors->any())
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -72,7 +93,7 @@
   @endif
 
   {{-- Content --}}
-  <main class="container mt-4">
+  <main class="container mt-5 pt-5">
     {{ $slot }}
   </main>
   <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>

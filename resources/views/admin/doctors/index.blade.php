@@ -1,20 +1,14 @@
+@extends('layouts.admin')
+
+@section('content')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
-<x-layout>
-  <div class="container">
-    <nav style="--bs-breadcrumb-divider: '';" aria-label="breadcrumb">
-      <div class="breadcrumb-container">
-      <div class="breadcrumb-container mb-2">
-      <a href="/admin/dashboard" class="breadcrumb-item first">
-        <i class="bi bi-house-fill"></i>
-      </a>
-      <a href="#" class="breadcrumb-item">
-        <i class="bi bi-beaker"></i> Kelola Dokter
-      </a>
-    </div>
-  </nav>
+  <div class="container  py-4">
+    <span class="badge rounded-pill px-4 py-2 mb-4 shadow-lg" style="background-color: #eef8f0; font-size:22px; color: #175e54; font-weight: 700;">
+      <i class="fa-solid fa-user-nurse"></i> Halaman Kelolah Dokter
+    </span>
     @if(session('success'))
       <script>
         iziToast.success({
@@ -24,37 +18,67 @@
         });
       </script>
     @endif
-    <div class="px-4 py-4 bg-light rounded-3">
+    <div class="px-4 py-4 h-100 rounded p-4 border-0 shadow-lg" style="background-color: #f6fbf7;">
       <div class="container-fluid">
-        <button class="btn btn-primary fw-bold mb-3" data-bs-toggle="modal" data-bs-target="#createDoctorModal">
-          Tambah Dokter
+        <button class="btn mb-3 fw-bold tombol-add text-white" data-bs-toggle="modal" data-bs-target="#createDoctorModal">
+          <i class="bi bi-plus-circle me-1"></i> Tambah Dokter
         </button>
         <div class="table-responsive">
           <table class="table" id="doctors-table">
-            <thead class="table-dark">
+            <thead>
               <tr>
                 <th>Nama</th>
                 <th>Spesialis</th>
                 <th>Institution</th>
                 <th>Username</th>
+                <th>Email</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               @forelse($doctors as $doctor)
+                <!-- Modal Konfirmasi Hapus Dokter -->
+                <div class="modal fade" id="confirmDeleteDoctor{{ $doctor->id }}" tabindex="-1" aria-labelledby="deleteDoctorLabel{{ $doctor->id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-danger">
+                      <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="deleteDoctorLabel{{ $doctor->id }}">Konfirmasi Hapus</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                      </div>
+                      <div class="modal-body">
+                        Yakin ingin menghapus dokter <strong>{{ $doctor->nama }}</strong>?
+                      </div>
+                      <div class="modal-footer">
+                        <form action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST" class="d-inline">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <tr>
                   <td>{{ $doctor->nama }}</td>
                   <td>{{ $doctor->spesialis }}</td>
                   <td>{{ $doctor->institution }}</td>
                   <td>{{ $doctor->username }}</td>
+                  <td>{{ $doctor->user->email ?? '-' }}</td>
                   <td>
                     <center>
-                      <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editDoctorModal{{ $doctor->id }}">Edit</button>
-                      <form action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin menghapus?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-danger">Hapus</button>
-                      </form>
+                      {{-- Tombol Edit --}}
+                      <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editDoctorModal{{ $doctor->id }}">
+                        <i class="fas fa-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Dokter"></i>
+                      </button>
+
+                      {{-- Tombol Hapus --}}
+                      <button 
+                        class="btn btn-sm btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#confirmDeleteDoctor{{ $doctor->id }}">
+                        <i class="fas fa-trash-alt" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Dokter"></i>
+                      </button>
                     </center>
                   </td>
                 </tr>
@@ -103,7 +127,7 @@
         @endforeach
       </div>
   </div>
-</x-layout>
+@endsection
 
 <!-- Modal Tambah Dokter -->
 <div class="modal fade" id="createDoctorModal" tabindex="-1" aria-hidden="true">
@@ -154,6 +178,8 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script>
   $(document).ready(function () {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach(t => new bootstrap.Tooltip(t));
     var table = $('#doctors-table').DataTable({
       responsive: true,
       language: {
@@ -171,5 +197,15 @@
 <style>
   .dataTables_filter input {
     max-width: 200px;
+  }
+  .tombol-add {
+    background-color: #175e54 !important;
+  }
+
+  table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: left;
+    border-top-width: 1px;
+    background: #175e54 !important;
+    color: white !important;
   }
 </style>

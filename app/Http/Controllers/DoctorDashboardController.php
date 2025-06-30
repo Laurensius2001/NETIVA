@@ -10,7 +10,11 @@ use App\Models\Doctor;
 class DoctorDashboardController extends Controller{
   public function index(){
     $doctor = auth()->user()->doctor;
-    $patients = Patient::with(['user', 'citra'])->get();
+
+    // Ambil hanya pasien yang ditangani oleh dokter ini saja
+    $patients = Patient::with(['user', 'citra'])
+                ->where('doctor_id', $doctor->id)
+                ->get();
     return view('dokter.dashboard', compact('doctor', 'patients'));
   }
 
@@ -37,4 +41,27 @@ class DoctorDashboardController extends Controller{
 
     return redirect()->route('dokter.dashboard')->with('success', 'Data berhasil diperbarui.');
   }
+
+  public function updateAnotasi(Request $request, $id)
+{
+    $request->validate([
+        'image' => 'required|string',
+    ]);
+
+    $patient = Patient::findOrFail($id);
+    $img = $request->input('image');
+
+    // Convert base64 ke file dan simpan
+    $image = str_replace('data:image/png;base64,', '', $img);
+    $image = str_replace(' ', '+', $image);
+    $imageName = 'anotasi_' . $id . '_' . time() . '.png';
+    \Storage::disk('public')->put('anotasi/' . $imageName, base64_decode($image));
+
+    // Simpan path-nya di database (contoh kolom `anotasi_path`)
+    $patient->anotasi_path = 'anotasi/' . $imageName;
+    $patient->save();
+
+    return response()->json(['success' => true]);
+}
+
 }

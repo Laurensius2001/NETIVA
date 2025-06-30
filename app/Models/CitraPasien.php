@@ -12,11 +12,13 @@ class CitraPasien extends Model
     protected $fillable = [
         'patient_id',
         'citra_sebelum',
-        'citra_sesudah'
-        ];
+        'citra_sesudah',
+        'citra_ai',
+        'ket_nakes',
+    ];
 
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
     }
-    }
+}
